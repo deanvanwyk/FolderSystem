@@ -60,7 +60,7 @@ public class Folder extends Item implements Cloneable{
             }
 
         }
-        this.files.add(f);
+        this.getFiles().add(f);
         f.setParentFolder(this);
 
     }
@@ -69,7 +69,7 @@ public class Folder extends Item implements Cloneable{
 
         boolean foundFile = false;
 
-        for(File currentFile : files){
+        for(File currentFile : this.getFiles()){
 
             if(currentFile.getName().equalsIgnoreCase(f.getName()) && currentFile.getType().equalsIgnoreCase(f.getType())){
                 foundFile = true;
@@ -78,7 +78,7 @@ public class Folder extends Item implements Cloneable{
         }
 
         if(foundFile){
-            this.files.remove(f);
+            this.getFiles().remove(f);
             f.setParentFolder(null);
         }
         else{
@@ -318,7 +318,7 @@ public class Folder extends Item implements Cloneable{
         return fileMap.contains(f);
     }
 
-    public boolean containsFolder(Folder f){
+    public boolean containsFolder(Folder f){ //checks only if individual folder contains queried folder
         Set<String> fileMap = new HashSet<>();
 
         for(Folder currentFolder : this.getFolders()){

@@ -156,4 +156,127 @@ public class FolderTest {
         assertTrue(dean.containsFolder(games));
     }
 
+    @Test
+    public void containsSubFolder(){
+
+        assertTrue(dean.containsSubFolder(games));
+
+    }
+
+    @Test
+    public void doesNotContainSubFolder(){
+        assertFalse(documents.containsSubFolder(games));
+    }
+
+    @Test
+    public void cloneFile(){
+
+        File cloned = (File) dota;
+
+        assertEquals(cloned, dota);
+    }
+
+   //Exception Testing
+
+    @Test(expected = SubFolderException.class)
+    public void copyIntoSubfolderException() throws SubFolderException, NameAlreadyUsedException, CloneNotSupportedException{
+        dean.copyFolder(desktop, games);
+    }
+
+    @Test(expected = SubFolderException.class)
+    public void moveIntoSubFolderException() throws SubFolderException, CloneNotSupportedException, NameAlreadyUsedException, NameNotFoundException {
+        dean.moveFolder(desktop,games);
+    }
+
+    @Test(expected = NameNotFoundException.class)
+    public void deleteNonExistentFile() throws NameNotFoundException{
+        documents.deleteFile(vacation);
+    }
+
+    @Test(expected = NameAlreadyUsedException.class)
+    public void addFileNameAlreadyUsedSameType() throws NameAlreadyUsedException{
+
+        File dota2 = new File("Dota 2", 225, "url");
+        games.addFile(dota2);
+    }
+
+    @Test
+    public void addFileNameAlreadyUsedDifferentType() throws NameAlreadyUsedException {
+
+        File dota2 = new File("Dota 2", 225, "ps4");
+        games.addFile(dota2);
+        games.containsFile(dota2);
+    }
+
+    @Test
+    public void deleteFileNameAlreadyUsedDifferentTypeNewFile() throws NameAlreadyUsedException, NameNotFoundException {
+
+        File dota2 = new File("Dota 2", 225, "ps4");
+        games.addFile(dota2);
+        games.deleteFile(dota);
+        assertTrue(games.containsFile(dota2));
+    }
+
+    @Test (expected = NameAlreadyUsedException.class)
+    public void copyFileToLocationWithSameFileNameSameType() throws NameAlreadyUsedException {
+        File secondTrailer = new File("Avengers Endgame Trailer", 15400, "mp4");
+
+        pictures.addFile(secondTrailer);
+        pictures.copyFile(secondTrailer, dean);
+    }
+
+    @Test
+    public void copyFileToLocationWithSameFileNameDifferentType() throws NameAlreadyUsedException {
+        File secondTrailer = new File("Avengers Endgame Trailer", 15400, "mkv");
+
+        pictures.addFile(secondTrailer);
+        pictures.copyFile(secondTrailer, dean);
+    }
+
+    @Test
+    public void deleteFileNameAlreadyUsedDifferentTypeOldFile() throws NameAlreadyUsedException, NameNotFoundException {
+
+        File dota2 = new File("Dota 2", 225, "ps4");
+        games.addFile(dota2);
+        games.deleteFile(dota);
+        assertFalse(games.containsFile(dota));
+    }
+
+    @Test(expected = NameNotFoundException.class)
+    public void deleteNonExistentFolder() throws NameNotFoundException {
+
+        pictures.deleteFolder(documents);
+    }
+
+    @Test(expected = NameAlreadyUsedException.class)
+    public  void addFolderWithExistentName() throws NameAlreadyUsedException {
+        Folder extraFolder = new Folder("Documents");
+        dean.addFolder(extraFolder);
+    }
+
+    @Test(expected = NameAlreadyUsedException.class)
+    public void copyFolderToFolderWithExistentName() throws NameAlreadyUsedException, SubFolderException, CloneNotSupportedException {
+        Folder documentGames = new Folder("Games");
+        documents.addFolder(documentGames);
+        desktop.copyFolder(games, documents);
+    }
+
+    @Test(expected = NameAlreadyUsedException.class)
+    public void moveFolderToFolderWithExistentName() throws NameAlreadyUsedException, SubFolderException, CloneNotSupportedException, NameNotFoundException {
+        Folder documentGames = new Folder("Games");
+        documents.addFolder(documentGames);
+        desktop.moveFolder(games, documents);
+    }
+
+    //toStringMethods
+    @Test
+    public void fileToString(){
+
+        assertEquals("Name: Vacation\nType: jpeg\nSize: 68 KB" + "\nDate created: " + vacation.getDateCreated() + "\nParent folder: Pictures" ,vacation.toString());
+    }
+    @Test
+    public void folderToString(){
+        assertEquals("Name: Dean\nDate created: " + dean.getDateCreated() + "\nParent Folder: None\nFolders: | Desktop | Documents | Pictures | \nFiles: | Avengers Endgame Trailer.mp4 |", dean.toString());
+    }
+
 }
