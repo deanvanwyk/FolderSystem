@@ -126,7 +126,7 @@ public class Folder extends Item implements Cloneable{
 
     public void copyFolder(Folder f, Folder destination) throws SubFolderException, CloneNotSupportedException, NameAlreadyUsedException{
 
-        if(f.isSubFolder(destination)){
+        if(f.containsSubFolder(destination)){
             throw new SubFolderException("The destination folder is a subfolder of the source folder.");
         }
         else{
@@ -139,7 +139,7 @@ public class Folder extends Item implements Cloneable{
 
     public void moveFolder(Folder f, Folder destination) throws SubFolderException, CloneNotSupportedException, NameAlreadyUsedException, NameNotFoundException{
 
-        if(f.isSubFolder(destination)){
+        if(f.containsSubFolder(destination)){
             throw new SubFolderException("The destination folder is a subfolder of the source folder.");
         }
         else{
@@ -213,7 +213,7 @@ public class Folder extends Item implements Cloneable{
         return files;
     }
 
-    public boolean isSubFolder(Folder destination){ //helper method to determine if inserted folder is a possible subfolder
+    public boolean containsSubFolder(Folder destination){ //helper method to determine if inserted folder is a possible subfolder
 
         LinkedList<Folder> stack = new LinkedList<>();
         boolean isSubFolder = false;
@@ -394,7 +394,7 @@ public class Folder extends Item implements Cloneable{
 
     }
 
-    private boolean containsFile(File f){
+    public boolean containsFile(File f){
 
         Set<File> fileMap = new HashSet<File>();
 
@@ -405,6 +405,18 @@ public class Folder extends Item implements Cloneable{
         }
 
         return fileMap.contains(f);
+    }
+
+    public boolean containsFolder(Folder f){
+        Set<String> fileMap = new HashSet<>();
+
+        for(Folder currentFolder : this.getFolders()){
+
+            fileMap.add(currentFolder.getName());
+
+        }
+
+        return fileMap.contains(f.getName());
     }
 
     public String toString(){
